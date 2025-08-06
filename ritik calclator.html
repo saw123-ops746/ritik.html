@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>iPhone Style Calculator with Expression</title>
+  <style>
+    body {
+      background-color: #000;
+      font-family: 'Helvetica Neue', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .calculator {
+      width: 340px;
+      background-color: #1c1c1c;
+      border-radius: 40px;
+      padding: 20px;
+      box-shadow: 0 0 20px #000;
+    }
+
+    .display {
+      color: white;
+      text-align: right;
+      font-size: 42px;
+      padding: 10px;
+      background-color: black;
+      border-radius: 10px;
+      margin-bottom: 10px;
+      overflow-x: auto;
+    }
+
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+
+    .btn {
+      font-size: 24px;
+      border: none;
+      border-radius: 50%;
+      padding: 20px;
+      color: white;
+      background-color: #333;
+      transition: 0.2s;
+    }
+
+    .btn.operator {
+      background-color: #ff9500;
+    }
+
+    .btn.gray {
+      background-color: #a5a5a5;
+      color: black;
+    }
+
+    .btn:active {
+      transform: scale(0.95);
+    }
+
+    .btn.zero {
+      grid-column: span 2;
+      border-radius: 40px;
+      text-align: left;
+      padding-left: 30px;
+    }
+  </style>
+</head>
+<body>
+  <div class="calculator">
+    <div id="display" class="display">0</div>
+    <div class="buttons">
+      <button class="btn gray" onclick="clearDisplay()">C</button>
+      <button class="btn gray" onclick="toggleSign()">±</button>
+      <button class="btn gray" onclick="percent()">%</button>
+      <button class="btn operator" onclick="appendOperator('/')">÷</button>
+
+      <button class="btn" onclick="appendNumber('7')">7</button>
+      <button class="btn" onclick="appendNumber('8')">8</button>
+      <button class="btn" onclick="appendNumber('9')">9</button>
+      <button class="btn operator" onclick="appendOperator('*')">×</button>
+
+      <button class="btn" onclick="appendNumber('4')">4</button>
+      <button class="btn" onclick="appendNumber('5')">5</button>
+      <button class="btn" onclick="appendNumber('6')">6</button>
+      <button class="btn operator" onclick="appendOperator('-')">−</button>
+
+      <button class="btn" onclick="appendNumber('1')">1</button>
+      <button class="btn" onclick="appendNumber('2')">2</button>
+      <button class="btn" onclick="appendNumber('3')">3</button>
+      <button class="btn operator" onclick="appendOperator('+')">+</button>
+
+      <button class="btn zero" onclick="appendNumber('0')">0</button>
+      <button class="btn" onclick="appendDecimal()">.</button>
+      <button class="btn operator" onclick="calculate()">=</button>
+      <button class="btn operator" onclick="squareRoot()">√</button>
+    </div>
+  </div>
+
+  <script>
+    let expression = '';
+
+    function updateDisplay(value = expression) {
+      document.getElementById('display').innerText = value || '0';
+    }
+
+    function appendNumber(num) {
+      expression += num;
+      updateDisplay();
+    }
+
+    function appendDecimal() {
+      expression += '.';
+      updateDisplay();
+    }
+
+    function appendOperator(op) {
+      if (/[+\-*/]$/.test(expression)) {
+        expression = expression.slice(0, -1); // replace last operator
+      }
+      expression += op;
+      updateDisplay();
+    }
+
+    function clearDisplay() {
+      expression = '';
+      updateDisplay();
+    }
+
+    function toggleSign() {
+      try {
+        let result = eval(expression);
+        result *= -1;
+        expression = result.toString();
+        updateDisplay();
+      } catch {
+        updateDisplay("Error");
+      }
+    }
+
+    function percent() {
+      try {
+        let result = eval(expression) / 100;
+        expression = result.toString();
+        updateDisplay();
+      } catch {
+        updateDisplay("Error");
+      }
+    }
+
+    function squareRoot() {
+      try {
+        let result = Math.sqrt(eval(expression));
+        expression = result.toString();
+        updateDisplay();
+      } catch {
+        updateDisplay("Error");
+      }
+    }
+
+    function calculate() {
+      try {
+        const result = eval(expression);
+        expression = result.toString();
+        updateDisplay();
+      } catch {
+        updateDisplay("Error");
+      }
+    }
+  </script>
+</body>
+</html>
